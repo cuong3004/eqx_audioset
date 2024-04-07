@@ -257,7 +257,7 @@ class LitResnet(LightningModule):
     def training_step(self, batch):
         batch = self.prepare_batch(batch)
         x, y = batch["images"], batch["labels"]
-        
+        print(x.shape)
         self.model, self.model_state, \
         stat_dict, \
         self.train_key, self.opt_state = make_train_step(self.model, self.model_state, 
