@@ -43,8 +43,8 @@ tf.config.optimizer.set_jit(True)
 # input_dtype = jnp.float32
 @jax.jit
 def accuracy_single(prediction, label):
-    
-    indices_label = jnp.where(label == 1)
+    print(label)
+    indices_label = jnp.where(label > 0.5)
     
     # num_label = 
     sorted_indices = np.argsort(prediction)
