@@ -70,7 +70,7 @@ class AudiosetModule(LightningDataModule):
         ignore_order = tf.data.Options()
         ignore_order.experimental_deterministic = False 
         
-        dataset = tf.data.TFRecordDataset(filenames, num_parallel_reads = AUTO)
+        dataset = tf.data.TFRecordDataset(filenames, num_parallel_reads = AUTO, compression_type = 'ZLIB')
         dataset = dataset.with_options(ignore_order)
         
         dataset = dataset.map(self.read_tfrecord, num_parallel_calls=AUTO)
