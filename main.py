@@ -61,7 +61,7 @@ def accuracy(predictions, labels):
     predictions = jax.nn.softmax(predictions, -1)
     # predicted_labels = predicted_labels
     
-    acc = jax.vmap(accuracy_single, in_axes=1)(predictions, labels)
+    acc = jax.vmap(accuracy_single, in_axes=0)(predictions, labels)
     acc = jnp.mean(acc)
     # np.argsort
     # indices_predict = jnp.where(predicted_labels > 0.2)
