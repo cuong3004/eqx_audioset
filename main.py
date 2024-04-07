@@ -41,7 +41,7 @@ tf.config.optimizer.set_jit(True)
 
 # input_dtype = jnp.bfloat16
 # input_dtype = jnp.float32
-# @jax.jit
+@jax.jit
 def accuracy_single(prediction, label):
     
     iou_predictions = prediction*label
@@ -59,7 +59,7 @@ def accuracy_single(prediction, label):
     # common_elements = np.intersect1d(top_k_indices, indices_label)
     # return len(common_elements)/len(indices_label)
 
-# @jax.jit
+@jax.jit
 def accuracy(predictions, labels):
     # predicted_labels = jnp.argmax(predictions, axis=-1)
     predictions = jax.nn.softmax(predictions, -1)
