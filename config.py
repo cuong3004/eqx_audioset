@@ -1,4 +1,4 @@
-batch_size = 64#256 * 8
+batch_size = 16#256 * 8
 batch_size_valid = batch_size
 
 train_set_len = 180000*11 # for part 0 and for part 1: 655167
