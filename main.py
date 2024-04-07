@@ -41,18 +41,35 @@ tf.config.optimizer.set_jit(True)
 
 # input_dtype = jnp.bfloat16
 # input_dtype = jnp.float32
+@jax.jit
+def accuracy_single(prediction, label):
+    
+    indices_label = jnp.where(label == 1)
+    
+    # num_label = 
+    sorted_indices = np.argsort(prediction)
+    top_k_indices = sorted_indices[:len(indices_label)]
+    
+    common_elements = np.intersect1d(top_k_indices, indices_label)
+    return len(common_elements)/len(indices_label)
 
-
-@eqx.filter_jit
+@jax.jit
 def accuracy(predictions, labels):
-    predicted_labels = jnp.argmax(predictions, axis=-1)
+    # predicted_labels = jnp.argmax(predictions, axis=-1)
+    predictions = jax.nn.softmax(predictions, -1)
+    # predicted_labels = predicted_labels
     
-    correct_predictions = jnp.sum(predicted_labels == labels)
+    acc = jnp.mean(jax.vmap(accuracy_single, in_axes=1)(predictions, labels))
+    # np.argsort
+    # indices_predict = jnp.where(predicted_labels > 0.2)
+    # indices_labels = jnp.where(labels == 1)
     
-    total_samples = labels.shape[0]
-    accuracy = correct_predictions / total_samples
+    # correct_predictions = jnp.sum(predicted_labels == labels)
     
-    return accuracy
+    # total_samples = labels.shape[0]
+    # accuracy = correct_predictions / total_samples
+    
+    return acc
 
 @eqx.filter_jit
 @eqx.filter_value_and_grad(has_aux=True)
@@ -65,7 +82,7 @@ def loss_fn(
     pred_y, model_state= jax.vmap(
         model, axis_name="batch", in_axes=(0, None, 0), out_axes=(0, None)
     )(x, model_state, batched_keys)
-    fn = optax.softmax_cross_entropy_with_integer_labels
+    fn = optax.softmax_cross_entropy
 
     return fn(pred_y, y).mean(), [model_state, pred_y]
 
@@ -247,13 +264,13 @@ class LitResnet(LightningModule):
         self.log_dict(stat_dict, prog_bar=True, batch_size=args['batch_size_train'])
         return stat_dict
     
-    def validation_step(self, batch, batch_idx):
-        batch = self.prepare_batch(batch)
-        x, y = batch["images"], batch["labels"]
+    # def validation_step(self, batch, batch_idx):
+    #     batch = self.prepare_batch(batch)
+    #     x, y = batch["images"], batch["labels"]
         
-        stat_dict = make_valid_step(self.inference_model, x, y)
-        stat_dict = jax.tree_map(lambda x: torch.scalar_tensor(x.item()),stat_dict)
-        self.log_dict(stat_dict, prog_bar=True, batch_size=args['batch_size_valid'])
+    #     stat_dict = make_valid_step(self.inference_model, x, y)
+    #     stat_dict = jax.tree_map(lambda x: torch.scalar_tensor(x.item()),stat_dict)
+    #     self.log_dict(stat_dict, prog_bar=True, batch_size=args['batch_size_valid'])
         
     def configure_optimizers(self):
         schedule = optax.warmup_cosine_decay_schedule(
