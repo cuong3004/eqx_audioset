@@ -44,6 +44,8 @@ tf.config.optimizer.set_jit(True)
 @jax.jit
 def accuracy_single(prediction, label):
     print(label)
+    print(label.shape)
+    print(label.dtype)
     indices_label = jnp.where(label > 0.5)
     
     # num_label = 
