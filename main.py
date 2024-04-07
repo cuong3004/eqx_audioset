@@ -130,7 +130,7 @@ def make_valid_step(
 
 def create_model(key):
     keys = jax.random.split(key, 3)
-    model = mobievit_xx_small_v3(keys[0], 1000)
+    model = mobievit_xx_small_v3(keys[0], 527)
     
     # model = mobilenet_v3_small(torch_weights=None, num_classes=1000)
 #     print(model.features)
