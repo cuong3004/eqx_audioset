@@ -141,7 +141,7 @@ def create_model(key):
 
     model = eqx.tree_at(lambda tree: tree.conv_1.layers[0], 
                     model, 
-                    eqx.nn.Conv2d(in_channels=3,
+                    eqx.nn.Conv2d(in_channels=1,
                                 out_channels=16,
                                 kernel_size=(3, 3),
                                 stride=(1, 3),
