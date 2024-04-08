@@ -105,7 +105,8 @@ def make_train_step(
 ):
     
     key, new_key = jax.random.split(key)
-    
+    print(x.shape, y.shape)
+    print(x.dtype, y.dtype)
     (loss_value, [model_state, pred_y]), grads = loss_fn(model, model_state, x, y, key)
     # updates, opt_state = opt_update(grads, opt_state, model)
     # model = eqx.apply_updates(model, updates)
@@ -115,6 +116,7 @@ def make_train_step(
     model = eqx.combine(params, static)
     
     acc = accuracy(pred_y, y)
+    print(jax.tree_map(jnp.shape, params))
     print("acc", acc.shape)
     print(loss_value.shape)
     stat_dict = {"train_loss": loss_value, "train_acc":acc}
