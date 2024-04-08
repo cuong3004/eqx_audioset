@@ -90,7 +90,7 @@ def loss_fn(
         model, axis_name="batch", in_axes=(0, None, 0), out_axes=(0, None)
     )(x, model_state, batched_keys)
     fn = optax.softmax_cross_entropy
-
+    
     return fn(pred_y, y).mean(), [model_state, pred_y]
 
 @eqx.filter_jit
@@ -138,13 +138,6 @@ def make_valid_step(
 def create_model(key):
     keys = jax.random.split(key, 3)
     model = mobievit_xx_small_v3(keys[0], 527)
-    
-    # model = mobilenet_v3_small(torch_weights=None, num_classes=1000)
-#     print(model.features)
-    # model.features.layers[0].layers[0] = eqx.nn.Conv2d(3, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), use_bias=False, key=keys[0])
-    # model.features[1].block.layers[0].layers[0] = eqx.nn.Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), use_bias=False, key=keys[1])
-    # model.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    # model.maxpool = nn.Identity()
 
     model = eqx.tree_at(lambda tree: tree.conv_1.layers[0], 
                     model, 
