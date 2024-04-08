@@ -221,7 +221,7 @@ class LitResnet(LightningModule):
         params, static = eqx.partition(self.model, eqx.is_array)
         params = jax.tree_map(lambda x:init_param_jax.random_intit(x), params)
         
-        vals, treedef = jax.tree_util.flatten(params)
+        vals, treedef = jax.tree_util.tree_flatten(params)
         vals = jax.tree_map(lambda x: x.size, vals)
         print("number of parameter:", jnp.sum(vals))
         # params = jax.tree_map(lambda x:x.astype(input_dtype) if x.dtype!=jnp.bool_ else x, params)
