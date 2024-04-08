@@ -95,7 +95,7 @@ def loss_fn(
     print(loss)
     return loss, [model_state, pred_y]
 
-# @eqx.filter_jit
+@eqx.filter_jit
 def make_train_step(
     model,
     model_state,
@@ -107,8 +107,8 @@ def make_train_step(
 ):
     
     key, new_key = jax.random.split(key)
-    print(x.shape, y)
-    print(x.dtype, y.dtype)
+    # print(x.shape, y)
+    # print(x.dtype, y.dtype)
     (loss_value, [model_state, pred_y]), grads = loss_fn(model, model_state, x, y, key)
     
     # def 
@@ -120,9 +120,9 @@ def make_train_step(
     model = eqx.combine(params, static)
     
     acc = accuracy(pred_y, y)
-    print(jax.tree_map(jnp.shape, params))
-    print("acc", acc.shape)
-    print(loss_value.shape)
+    # print(jax.tree_map(jnp.shape, params))
+    # print("acc", acc.shape)
+    # print(loss_value.shape)
     stat_dict = {"train_loss": loss_value, "train_acc":acc}
     return model, model_state, stat_dict, new_key, opt_state
 
@@ -262,7 +262,7 @@ class LitResnet(LightningModule):
     def training_step(self, batch):
         batch = self.prepare_batch(batch)
         x, y = batch["images"], batch["labels"]
-        print(x.shape)
+        # print(x.shape)
         self.model, self.model_state, \
         stat_dict, \
         self.train_key, self.opt_state = make_train_step(self.model, self.model_state, 
@@ -271,7 +271,7 @@ class LitResnet(LightningModule):
                                                             self.opt_state,
                                                             self.optim.update
                                                           )
-        print("ok_out")
+        # print("ok_out")
         
         stat_dict = jax.tree_map(lambda x: torch.scalar_tensor(x.item()),stat_dict)
         self.log_dict(stat_dict, prog_bar=True, batch_size=args['batch_size_train'])
