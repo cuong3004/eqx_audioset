@@ -115,6 +115,7 @@ def make_train_step(
     model = eqx.combine(params, static)
     
     acc = accuracy(pred_y, y)
+    print("acc", acc)
     stat_dict = {"train_loss": loss_value, "train_acc":acc}
     return model, model_state, stat_dict, new_key, opt_state
 
