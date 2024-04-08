@@ -105,9 +105,11 @@ def make_train_step(
 ):
     
     key, new_key = jax.random.split(key)
-    print(x.shape, y.shape)
+    print(x.shape, y)
     print(x.dtype, y.dtype)
     (loss_value, [model_state, pred_y]), grads = loss_fn(model, model_state, x, y, key)
+    
+    # def 
     # updates, opt_state = opt_update(grads, opt_state, model)
     # model = eqx.apply_updates(model, updates)
     params, static = eqx.partition(model, eqx.is_array)
