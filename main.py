@@ -35,6 +35,7 @@ from config import args
 # import dm_pix as pix
 
 print(xla_bridge.get_backend().platform)
+print(jax.devices())
 
 import tensorflow as tf 
 tf.config.optimizer.set_jit(True)
