@@ -90,8 +90,9 @@ def loss_fn(
         model, axis_name="batch", in_axes=(0, None, 0), out_axes=(0, None)
     )(x, model_state, batched_keys)
     fn = optax.softmax_cross_entropy
-    
-    return fn(pred_y, y).mean(), [model_state, pred_y]
+    loss = fn(pred_y, y).mean()
+    print(loss)
+    return loss, [model_state, pred_y]
 
 # @eqx.filter_jit
 def make_train_step(
