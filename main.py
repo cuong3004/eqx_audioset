@@ -92,7 +92,7 @@ def loss_fn(
     )(x, model_state, batched_keys)
     fn = optax.softmax_cross_entropy
     loss = fn(pred_y, y).mean()
-    print(loss)
+    # print(loss)
     return loss, [model_state, pred_y]
 
 @eqx.filter_jit
