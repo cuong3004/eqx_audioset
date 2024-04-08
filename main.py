@@ -93,7 +93,7 @@ def loss_fn(
     
     return fn(pred_y, y).mean(), [model_state, pred_y]
 
-@eqx.filter_jit
+# @eqx.filter_jit
 def make_train_step(
     model,
     model_state,
