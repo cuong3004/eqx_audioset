@@ -253,14 +253,16 @@ class LitResnet(LightningModule):
         batch = self.prepare_batch(batch)
         x, y = batch["images"], batch["labels"]
         print(x.shape)
-        self.model, self.model_state, \
-        stat_dict, \
-        self.train_key, self.opt_state = make_train_step(self.model, self.model_state, 
+        # self.model, self.model_state, \
+        # stat_dict, \
+        # self.train_key, self.opt_state = 
+        make_train_step(self.model, self.model_state, 
                                                             x, y,
                                                             self.train_key,
                                                             self.opt_state,
                                                             self.optim.update
                                                           )
+        print("ok_out")
         
         stat_dict = jax.tree_map(lambda x: torch.scalar_tensor(x.item()),stat_dict)
         self.log_dict(stat_dict, prog_bar=True, batch_size=args['batch_size_train'])
@@ -304,9 +306,9 @@ class LitResnet(LightningModule):
             eqx.tree_serialise_leaves(f, self.model_state)
 
     
-    def on_validation_epoch_start(self):
-        self.inference_model = eqx.nn.inference_mode(self.model)
-        self.inference_model = eqx.Partial(self.inference_model, state=self.model_state, key=self.train_key)
+    # def on_validation_epoch_start(self):
+    #     self.inference_model = eqx.nn.inference_mode(self.model)
+    #     self.inference_model = eqx.Partial(self.inference_model, state=self.model_state, key=self.train_key)
         
         
 
