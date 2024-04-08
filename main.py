@@ -115,7 +115,8 @@ def make_train_step(
     model = eqx.combine(params, static)
     
     acc = accuracy(pred_y, y)
-    print("acc", acc)
+    print("acc", acc.shape)
+    print(loss_value.shape)
     stat_dict = {"train_loss": loss_value, "train_acc":acc}
     return model, model_state, stat_dict, new_key, opt_state
 
@@ -284,7 +285,7 @@ class LitResnet(LightningModule):
         
         self.optim = optax.chain(
             optax.clip_by_global_norm(1.0),  # Clip by the gradient by the global norm.
-            optax.MultiSteps(optax.adamw(learning_rate=schedule), every_k_schedule=3),  # Use the updates from adam.
+            optax.adamw(learning_rate=schedule),  # Use the updates from adam.
             # optax.scale_by_schedule(scheduler),  # Use the learning rate from the scheduler.
             # Scale updates by -1 since optax.apply_updates is additive and we want to descend on the loss.
             # optax.scale(-1.0)
